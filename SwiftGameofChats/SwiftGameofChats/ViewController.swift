@@ -8,18 +8,26 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+/* UITableViewControllerに変更することで、TableViewに変更できる */
+class ViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        /* TableViewの左上にNavigationItemを設置 */
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
+        
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func handleLogout(){
+        
+        /* LoginController.swiftから読み込み */
+        let loginController = LoginController()
+        /* loginControllerに移動 */
+        present(loginController, animated: true, completion: nil)
+        
     }
-
-
+    
+    
 }
 
