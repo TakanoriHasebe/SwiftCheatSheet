@@ -7,8 +7,11 @@
 //
 
 import UIKit
+import Firebase
 
 class LoginController: UIViewController {
+    
+    /***************** 各ViewをMainStroy Boardを使わずに作成 ******************/
     
     let inputsContainerView: UIView = {
         let view = UIView()
@@ -19,15 +22,58 @@ class LoginController: UIViewController {
         return view
     }()
     
-    let loginRegisterButton: UIButton = {
+    lazy var loginRegisterButton: UIButton = {
         let button = UIButton(type: .system)
         button.backgroundColor = UIColor(r: 80, g: 101, b: 161)
         button.setTitle("Register", for: UIControlState())
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(UIColor.white, for: UIControlState())
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        
+        button.addTarget(self, action: #selector(handleRegister), for: .touchUpInside)
+        
         return button
     }()
+    
+    /******************************* メールアドレスで登録 *********************************/
+    func handleRegister(){
+        
+        guard let email = emailTextField.text, let password = passwordTextField.text,let name = nameTextField.text else{
+            print("Form is not valid")
+            return
+        }
+        
+        Auth.auth().createUser(withEmail: email, password: password) { (user: User?, error) in
+            
+            if error != nil{
+                print(error)
+                return
+            }
+            
+            guard let uid = user?.uid else{
+                return
+            }
+
+            let ref = Database.database().reference(fromURL: "https://gameofchat-691e3.firebaseio.com/")
+            let usersReference = ref.child("users").child(uid)
+            let values = ["name": name, "email": email]
+            usersReference.updateChildValues(values, withCompletionBlock: { (error, ref) in
+                
+                if error != nil{
+                    
+                    print(error)
+                    return
+                    
+                }
+                
+                print("ユーザー情報がDatabaseに保存されました。")
+                
+            })
+        
+        }
+        
+    }
+    /******************************* メールアドレスで登録 *********************************/
     
     let nameTextField: UITextField = {
         let tf = UITextField()
@@ -73,19 +119,27 @@ class LoginController: UIViewController {
         return imageView
     }()
     
+    /***************** 各ViewをMainStroy Boardを使わずに作成 ******************/
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = UIColor(r: 61, g: 91, b: 151)
         
+        /***************** 各Viewを貼り付け ******************/
         view.addSubview(inputsContainerView)
         view.addSubview(loginRegisterButton)
         view.addSubview(profileImageView)
+        /***************** 各Viewを貼り付け ******************/
         
+        /***************** Constraintsを適用 ******************/
         setupInputsContainerView()
         setupLoginRegisterButton()
         setupProfileImageView()
+        /***************** Constraintsを適用 ******************/
     }
+    
+    /***************** Constraintsを適用 ******************/
     
     func setupProfileImageView() {
         //need x, y, width, height constraints
@@ -149,6 +203,8 @@ class LoginController: UIViewController {
         loginRegisterButton.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         loginRegisterButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
+    
+    /***************** Constraintsを適用 ******************/
     
     override var preferredStatusBarStyle : UIStatusBarStyle {
         return .lightContent
