@@ -30,7 +30,7 @@ class LoginController: UIViewController {
         button.setTitleColor(UIColor.white, for: UIControlState())
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         
-        button.addTarget(self, action: #selector(handleRegister), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleLoginRegisterChange), for: .touchUpInside)
         
         return button
     }()
