@@ -45,23 +45,23 @@ class LoginController: UIViewController {
         }
     }
 
-    func handleLogin() {
-        guard let email = emailTextField.text, let password = passwordTextField.text else {
+    func handleLogin(){
+        
+        guard let email = emailTextField.text, let password = passwordTextField.text else{
             print("Form is not valid")
             return
         }
         
-        Auth.auth().signIn(withEmail: email, password: password, completion: { (user, error) in
+        Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
             
-            if let error = error {
+            if error != nil{
                 print(error)
                 return
             }
             
-            //successfully logged in our user
             self.dismiss(animated: true, completion: nil)
             
-        })
+        }
         
     }
     
