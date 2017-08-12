@@ -30,7 +30,7 @@ class LoginController: UIViewController {
         button.setTitleColor(UIColor.white, for: UIControlState())
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         
-        button.addTarget(self, action: #selector(handleLoginRegisterChange), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleLoginRegister), for: .touchUpInside)
         
         return button
     }()
@@ -103,6 +103,8 @@ class LoginController: UIViewController {
 
     /******************************* メールアドレスで登録 *********************************/
     
+    /******************************* 各UIを作成 *********************************/
+    
     let nameTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "Name"
@@ -156,6 +158,27 @@ class LoginController: UIViewController {
         return sc
     }()
     
+    /******************************* 各UIを作成 *********************************/
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.backgroundColor = UIColor(r: 61, g: 91, b: 151)
+        
+        view.addSubview(inputsContainerView)
+        view.addSubview(loginRegisterButton)
+        view.addSubview(profileImageView)
+        view.addSubview(loginRegisterSegmentedControl)
+        
+        setupInputsContainerView()
+        setupLoginRegisterButton()
+        setupProfileImageView()
+        setupLoginRegisterSegmentedControl()
+    }
+    
+    /******************************* 各Constraintsを適用 *********************************/
+    
     func handleLoginRegisterChange() {
         let title = loginRegisterSegmentedControl.titleForSegment(at: loginRegisterSegmentedControl.selectedSegmentIndex)
         loginRegisterButton.setTitle(title, for: UIControlState())
@@ -177,22 +200,7 @@ class LoginController: UIViewController {
         passwordTextFieldHeightAnchor = passwordTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 1/2 : 1/3)
         passwordTextFieldHeightAnchor?.isActive = true
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        view.backgroundColor = UIColor(r: 61, g: 91, b: 151)
-        
-        view.addSubview(inputsContainerView)
-        view.addSubview(loginRegisterButton)
-        view.addSubview(profileImageView)
-        view.addSubview(loginRegisterSegmentedControl)
-        
-        setupInputsContainerView()
-        setupLoginRegisterButton()
-        setupProfileImageView()
-        setupLoginRegisterSegmentedControl()
-    }
+
     
     func setupLoginRegisterSegmentedControl() {
         //need x, y, width, height constraints
@@ -275,6 +283,8 @@ class LoginController: UIViewController {
         loginRegisterButton.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         loginRegisterButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
+    
+    /******************************* 各Constraintsを適用 *********************************/
     
     override var preferredStatusBarStyle : UIStatusBarStyle {
         return .lightContent
